@@ -28,8 +28,11 @@ lit Photo 相册
 
     3. 强制创建索引,不使用图片缓存(适合图片修改后创建索引).
         |- php index.php BuildIndexForce
+    
+    4. 授权用户访问
+        |- 修改 $User 数组变量,配置可使的用户名密码.
  
-    4. 访问相册
+    5. 访问相册
         |- 将本文件部署到WebService然后访问项目域名即可.
 		|- 具体WebService配置将不再详细赘述.
 ```

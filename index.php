@@ -1,22 +1,16 @@
 <?php
 
 /**
- * 1. 检测运行环境
- *   |- php index.php CheckEnv
- *
- * 2. 增量创建索引(适合图片新增)
- *   |- php index.php BuildIndex 
- *
- * 3. 强制创建索引,不使用图片缓存(适合图片修改后创建索引)
- *   |- php index.php BuildIndexForce
- * 
- * 4. 访问相册
- *   |- 直接访问项目域名
- *
+ * 使用 " php index.php --help " 查看帮助
  * */
 
 ini_set('display_errors', 0);
 error_reporting(0);
+
+$User = array ( //配置使用者的用户名密码
+    // UserName => PassWord ,
+    'xxx' => 'xxx',
+);
 
 define( 'PHOTO_DIR', '/data/syncthing/Photos' ) ; //配置照片的目录
 define( 'TMP_DIR'  , '/data/tmp/Photos' ) ;     //临时目录
@@ -33,7 +27,7 @@ if ( PHP_SAPI == 'cli' ) {
 }
 
 if ( RUN_MODEL == 'cgi' ) {
-    AccessControl();
+    AccessControl($User);
 }
 
 $Photo = new Photo ( PHOTO_DIR, TMP_DIR, $PhotoExt );
@@ -283,13 +277,9 @@ Class Photo {
 /**
  * 权限访问
  * */
-function AccessControl () {
-    $User = array (
-        'aaaa' => 'bbb',
-    );
-
+function AccessControl ( $User ) {
     if( ( !isset($User[$_SERVER['PHP_AUTH_USER']]) || $_SERVER['PHP_AUTH_PW'] != $User[$_SERVER['PHP_AUTH_USER']] ) || !$_SERVER['PHP_AUTH_USER'] ){ 
-        header('WWW-Authenticate: Basic realm="Haokan auth"'); 
+        header('WWW-Authenticate: Basic realm="Photo Auth"'); 
         header('HTTP/1.0 401 Unauthorized'); 
         die('Unauthorized');
     }
@@ -492,16 +482,19 @@ function ProgressBar($Now ,$Max){
 #帮助页面
 function HelpPage () {
 echo <<<EOF
- * |- 1. 检测运行环境 
+ * |- 1. 检测运行环境.
  *   |- php index.php CheckEnv 
  *
- * |- 2. 增量创建索引(适合图片新增) 
+ * |- 2. 增量创建索引(适合图片新增).
  *   |- php index.php BuildIndex  
  *
- * |- 3. 强制创建索引,不使用图片缓存(适合图片修改后创建索引) 
+ * |- 3. 强制创建索引,不使用图片缓存(适合图片修改后创建索引).
  *   |- php index.php BuildIndexForce 
- * 
- * |- 4. 访问相册 
+ *
+ * |- 4. 授权用户访问.
+ *   |- 修改 \$User 数组变量,配置可使的用户名密码
+ *
+ * |- 5. 访问相册.
  *   |- 将本文件部署到WebService然后访问项目域名即可 
  \n
 EOF;
