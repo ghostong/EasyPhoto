@@ -15,7 +15,7 @@ lit Photo 相册
 
 2. 下载代码
 ```php
-    git clone git@code.aliyun.com:lit/photo.git
+    git clone git@github.com:ghostong/EasyPhoto.git
 ```
 
 3. 配置项目
